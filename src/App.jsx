@@ -5,6 +5,7 @@ import Home from "./components/Home";
 import Login from "./auth/Login";
 import Signup from "./auth/Signup";
 import Dashboard from "./auth/Dashboard";
+import './App.css'
 
 function App() {
   const [count, setCount] = useState(0);
@@ -13,16 +14,16 @@ function App() {
     <>
      <nav className="navbar navbar-expand-sm bg-dark navbar-dark">
 
-<div className="container-fluid">
-  <ul className="navbar-nav">
+<div className="container-fluid ">
+  <ul className="navbar-nav ms-auto mx-4">
     <li className="nav-item">
       <Link className="nav-link" to="/">Home</Link>
     </li>
-    <li className="nav-item">
-      <Link className="nav-link" to="/login">Login</Link>
+    <li className="nav-item mx-4">
+      <Link className="nav-link btn-home-section" to="/login">Login</Link>
     </li>
-    <li className="nav-item">
-      <Link className="nav-link" to="/sign-up">Sign Up</Link>
+    <li className="nav-item mx-4">
+      <Link className="nav-link btn-home-section" to="/sign-up">Sign Up</Link>
     </li>
   </ul>
 </div>
