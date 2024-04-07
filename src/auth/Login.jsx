@@ -8,7 +8,7 @@ function login() {
   // for validation 
   const [passwordValidation,setPasswordValidation]=useState(false);
   const [emailValidation,setEmailValidation]=useState(false);
-  const [formError,setFormError]=useState(null);
+  const [formError,setFormError]=useState('');
   const [emailError ,setEmailError]=useState('');
   const [passwordError ,setPasswordError]=useState('');
 
