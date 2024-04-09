@@ -1,7 +1,17 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import Login from '../auth/Login'
+import AuthUser from '../AuthUser'
+import App from '../App'
 
 function Sidebar() {
+    const {token} =AuthUser();
+    const navigate=useNavigate();
+    if(!token){
+        debugger
+        navigate('/login')
+        return null
+    }
   return (
     <div className="d-flex flex-column text-white bg-dark" style={{ minHeight:'93vh',width:"100%"}}>
         <a href="/" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">

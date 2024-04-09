@@ -20,6 +20,9 @@ export default function AuthUser(){
         setUser(user);
         navigate('/dashboard')
     }
+    const logout=()=>{
+        localStorage.clear();
+    }
    
 
     const http=axios.create({
@@ -33,6 +36,7 @@ export default function AuthUser(){
         token,
         user,
         getToken,
-        http
+        http,
+        logout
     }
 }

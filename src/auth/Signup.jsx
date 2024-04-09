@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import AuthUser from '../AuthUser';
+import { toast } from 'react-toastify';
 function Signup() {
   // for btn spinner 
 const [btnSpinner,setBtnSpinner]=useState(false);
+const navigate=useNavigate();
 const {http,setAuthToken}=AuthUser();
 const [formData,setFormData]=useState({
   name:'',
@@ -43,9 +45,26 @@ const handleSignupForm=()=>{
     setBtnSpinner(true)
 
     http.post('/register',formData).then((res)=>{
-      let data=res.data
-      setAuthToken(data.user,data.token)
+      let data=res.data;
       setBtnSpinner(false)
+      if(data.response){
+        toast.success(data.message);
+        navigate('/login')
+        // setAuthToken(data.user,data.token)
+      }else if(data.message){
+        if(typeof data.message==="object"){
+          Object.keys(data.message).forEach((key)=>{
+            data.message[key].forEach((err)=>{
+              toast.error(err);
+            })
+          })
+        }
+        if(typeof data.message==="string"){
+          toast.error(data.message);
+        }
+      }else{
+
+      }
     }).catch((error=>{
       console.log(error);
     }))
@@ -56,9 +75,6 @@ const validationEmail=(email)=>{
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
-
-
-
   return (
     <div className="login-clean-signup">
     <form >
