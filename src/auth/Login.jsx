@@ -1,8 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AuthUser from "../AuthUser";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function login() {
+  const { token } = AuthUser();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (token) {
+      navigate("/dashboard");
+    }
+  });
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { http, setAuthToken } = AuthUser();
