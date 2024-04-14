@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import AuthUser from '../AuthUser';
 import { toast } from 'react-toastify';
+import Header from './Header';
 function Signup() {
   // for btn spinner 
 const [btnSpinner,setBtnSpinner]=useState(false);
@@ -75,7 +76,15 @@ const validationEmail=(email)=>{
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
+const { token } = AuthUser();
+useEffect(() => {
+  if (token) {
+    navigate("/dashboard");
+  }
+});
   return (
+    <>
+    <Header />
     <div className="login-clean-signup">
     <form >
       <h2 className="sr-only text-center ">Signup  Form</h2>
@@ -139,6 +148,8 @@ const validationEmail=(email)=>{
       
     </form>
   </div>
+  </>
+
   )
 }
 

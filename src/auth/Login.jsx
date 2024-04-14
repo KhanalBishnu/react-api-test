@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AuthUser from "../AuthUser";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import Header from "./Header";
 
 function login() {
   const { token } = AuthUser();
@@ -67,6 +68,8 @@ function login() {
     }
   };
   return (
+    <>
+    <Header />
     <div className="login-clean">
       <form>
         <h2 className="sr-only text-center ">Login Form</h2>
@@ -115,6 +118,8 @@ function login() {
         </a>
       </form>
     </div>
+    </>
+
   );
 }
 
