@@ -10,7 +10,7 @@ function AddProduct() {
     
       return (
         <div>
-          <h2>Add Product</h2>
+          <h2>Add Note</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="productName" className="form-label">Product Name</label>

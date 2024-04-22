@@ -19,7 +19,7 @@ function App() {
         <Route path="/sign-up" element={<Signup />} />
         <Route path="/dashboard/*" element={<ProtectedRoute Component={Dashboard} />} >
           <Route path="add-product" element={<AddProduct />} />
-          <Route path="view-product" element={<ProductList />} />
+          <Route path="products" element={<ProductList />} />
         </Route>
       </Routes>
     </>

@@ -12,14 +12,19 @@ const [formData,setFormData]=useState({
   name:'',
   email:'',
   password:'',
-  confirm_password:''
+  confirm_password:'',
+  file:'',
 });
 const [errors,setErrors]=useState({});
 
 const handleField=(e)=>{
+  let fieldvalue = e.target.value;
+  if (e.target.name === "file") {
+    fieldvalue = e.target.files[0];
+  }
   setFormData({
     ...formData,
-    [e.target.name]:e.target.value
+    [e.target.name]:fieldvalue
   })
 }
 const handleSignupForm=()=>{
@@ -44,7 +49,6 @@ const handleSignupForm=()=>{
 
   if(Object.keys(newError).length===0){
     setBtnSpinner(true)
-
     http.post('/register',formData).then((res)=>{
       let data=res.data;
       setBtnSpinner(false)
@@ -136,6 +140,16 @@ useEffect(() => {
           value={formData.confirm_password}
         />
         {errors.confirm_password1 &&  <span className='text-danger'>{errors.confirm_password1}</span>}
+      </div>
+      <div className="form-group my-2 py-1">
+      <label htmlFor="confirm_password">Photo</label>
+        <input
+          className={`form-control rounded ${errors.file?'border border-danger':''}`}
+          type="file"
+          name="file"
+          onChange={handleField}
+        />
+        {errors.file &&  <span className='text-danger'>{errors.file}</span>}
       </div>
       <div className="form-group">
         <button className={`btn  w-100 mt-3 ${btnSpinner?'btn-success':'btn-primary'}`} type="button" onClick={handleSignupForm}>

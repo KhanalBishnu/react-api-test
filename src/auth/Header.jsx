@@ -3,7 +3,7 @@ import AuthUser from "../AuthUser";
 import { Link } from "react-router-dom";
 
 function Header() {
-  const { token, logout } = AuthUser();
+  const { token, logout,user } = AuthUser();
   const handleLogout = () => {
     if (token != undefined) {
       logout();
@@ -28,6 +28,21 @@ function Header() {
                 >
                   Logout
                 </Link>
+              </li>
+              <li className="nav-item mx-4">
+              {user?.media.map((media, index) => (
+                <div key={index}>
+                  {media.mime_type.startsWith('image') ? (
+                    <img src={media.original_url} alt={`Image ${index}`}   height="50px" className=" rounded border-warning border bo "
+                    width="70px"/>
+                  ) : (
+                    <video src={media.url} controls>
+                      Your browser does not support the video tag.
+                    </video>
+                  )}
+                </div>
+              ))}
+               
               </li>
             </>
           ) : (
