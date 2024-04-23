@@ -1,30 +1,57 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Sidebar from '../layout/sidebar'
 import Dashboard from '../auth/Dashboard'
 
 function AddProduct() {
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Add your logic to handle form submission here
+  const [errors,setErrors]=useState({});
+  const [formField,setFormField]=useState({
+    title:'',
+    description:"",
+    tags:'',
+    file:null
+  });
+    const handleFields=()=>{
+      let fieldValue=e.target.value;
+      if(e.target.name=="file"){
+        fieldValue=e.target.files[0];
+      }
+      setFormField({
+        ...formField,
+        [e.target.name]:fieldValue
+      })
+    }
+    const handleSubmitProduct = () => {
+        const newErrors={};
+        if(!formField.title.trim()){
+          newErrors.title="Title field is required!"
+        }
+        if(!formField.description.trim()){
+          newErrors.description="Description field is required!"
+        }
+        setErrors(newErrors)
       };
     
       return (
-        <div>
-          <h2>Add Note</h2>
-          <form onSubmit={handleSubmit}>
+        <div className='p-4 m-5 border rounded '>
+          <h2>Add Product</h2>
+          <form >
             <div className="mb-3">
-              <label htmlFor="productName" className="form-label">Product Name</label>
-              <input type="text" className="form-control" id="productName" />
+              <label htmlFor="title" className="form-label">Product Title</label>
+              <input type="text" className={`form-control border ${errors.title?' border-danger':""}`} id="title" onChange={handleFields} />
             </div>
             <div className="mb-3">
-              <label htmlFor="productDescription" className="form-label">Product Description</label>
-              <textarea className="form-control" id="productDescription"></textarea>
+              <label htmlFor="description" className="form-label">Product Description</label>
+              <textarea className={`form-control border ${errors.description?' border-danger':""}`} id="description"></textarea>
             </div>
             <div className="mb-3">
-              <label htmlFor="productPrice" className="form-label">Product Price</label>
-              <input type="text" className="form-control" id="productPrice" />
+              <label htmlFor="tags" className="form-label">Product Tags</label>
+              <input type="text" className="form-control border " id="tags" />
             </div>
-            <button type="submit" className="btn btn-primary">Submit</button>
+            <div className="mb-3">
+              <label htmlFor="files" className="form-label">Product File</label>
+              <input type="file" className="form-control border " id="file" />
+            </div>
+            <button type='button' onClick={handleSubmitProduct} className="btn btn-primary">Submit</button>
           </form>
         </div>
       );

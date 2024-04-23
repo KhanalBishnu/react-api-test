@@ -16,7 +16,7 @@ function Dashboard() {
             <Sidebar />
           </div>
           <div className="col-md-10">
-          <Outlet />
+            <Outlet />
           </div>
         </div>
       </div>
