@@ -11,7 +11,7 @@ function Header() {
     }
   };
   return (
-    <nav className="navbar navbar-expand-sm bg-dark navbar-dark">
+    <nav className="navbar navbar-expand-sm bg-dark navbar-dark p-0">
       <div className="container-fluid ">
         <ul className="navbar-nav ms-auto mx-4">
           <li className="nav-item">

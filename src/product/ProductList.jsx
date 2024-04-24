@@ -45,7 +45,7 @@ function ProductList() {
     ));
   };
   return (
-    <div className="p-4 bg-gradient" style={{ height: "92vh" }}>
+    <div className="p-4 bg-gradient" style={{ height: "92vh",overflow:'auto' }}>
       {loading ? (
        <Spinner />
       ) : (
