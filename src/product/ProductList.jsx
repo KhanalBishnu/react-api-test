@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import AuthUser from "../AuthUser";
 import Spinner from "../components/Spinner";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import ProductTableRow from "./ProductTableRow";
+
+
 
 function ProductList() {
   const productURL = "/dashboard/products";
@@ -8,6 +13,10 @@ function ProductList() {
   const [loading, setLoading] = useState(true);
 
   const { http } = AuthUser();
+  // bootstrap modal 
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   useEffect(() => {
     getProductList();
   }, []);
@@ -26,22 +35,14 @@ function ProductList() {
       console.log(error);
     }
   };
+  const handleUpdate = (productId,formData) => {
+    console.log(formData);
+    debugger
+};
+
   const renderListOfProducts = (products) => {
     return products?.map((product, index) => (
-      <tr key={index}>
-        <td>{index + 1}</td>
-        <td>{product.title}</td>
-        <td>{product.description}</td>
-        <td>{product.tags}</td>
-        <td>
-          <a href="" className="btn btn-primary">
-            Edit
-          </a>
-          <a href="" className="btn btn-danger ">
-            Delete
-          </a>
-        </td>
-      </tr>
+      <ProductTableRow key={product.id} index={index} product={product} onUpdate={handleUpdate} />
     ));
   };
   return (
@@ -54,7 +55,8 @@ function ProductList() {
             <tr>
               <th>SN</th>
               <th>Title</th>
-              <th>Discription</th>
+              {/* <th>Discription</th> */}
+              <th>Image</th>
               <th>Tags</th>
               <th>Action</th>
             </tr>
