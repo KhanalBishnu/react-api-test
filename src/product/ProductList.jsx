@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import AuthUser from "../AuthUser";
 import Spinner from "../components/Spinner";
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
 import ProductTableRow from "./ProductTableRow";
-
-
+import { toast } from "react-toastify";
 
 function ProductList() {
   const productURL = "/dashboard/products";
@@ -13,10 +10,6 @@ function ProductList() {
   const [loading, setLoading] = useState(true);
 
   const { http } = AuthUser();
-  // bootstrap modal 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   useEffect(() => {
     getProductList();
   }, []);
@@ -27,6 +20,7 @@ function ProductList() {
         if (data.response) {
           setProducts(data.products);
         } else {
+          toast.success(data.message);
           console.log(data.message || "Something went wrong!");
         }
         setLoading(false);
@@ -35,20 +29,70 @@ function ProductList() {
       console.log(error);
     }
   };
-  const handleUpdate = (productId,formData) => {
-    console.log(formData);
-    debugger
-};
+  // update function for product
+  const handleUpdate = (productId, formData) => {
+    let newFormData = { ...formData, id: productId };
+    setLoading(true);
+    http.post(`${productURL}/update`, newFormData).then((res) => {
+      let data = res.data;
+      setLoading(false);
+      if (data.response) {
+        toast.success(data.message);
+        getProductList();
+        // setProducts(products.map((product) => {
+        //   if (product.id === productId) {
+        //     return { ...product, ...newFormData };
+        //   }
+        //   return product;
+        // }));
+      } else if (data.message) {
+        if (typeof data.message === "object") {
+          Object.keys(data.message).forEach((key) => {
+            data.message[key].forEach((err) => {
+              toast.error(err);
+            });
+          });
+        }
+        if (typeof data.message == "string") {
+          toast.error(data.message);
+        }
+      }
+    });
+  };
+
+  const handleDeleteProduct=(productId)=>{
+    console.log(productId);
+    setLoading(true);
+    http.get(`${productURL}/delete/`+productId).then((res)=>{
+      let data=res.data;
+      setLoading(false);
+      if(data.response){
+        toast.success(data.message);
+        setProducts(products.filter((product) => product.id !== productId));
+      }else{
+        toast.error(data.message);
+      }
+    })
+  }
 
   const renderListOfProducts = (products) => {
     return products?.map((product, index) => (
-      <ProductTableRow key={product.id} index={index} product={product} onUpdate={handleUpdate} />
+      <ProductTableRow
+        key={product.id}
+        index={index}
+        product={product}
+        onUpdate={handleUpdate}
+        onDelete={handleDeleteProduct}
+      />
     ));
   };
   return (
-    <div className="p-4 bg-gradient" style={{ height: "92vh",overflow:'auto' }}>
+    <div
+      className="p-4 bg-gradient"
+      style={{ height: "92vh", overflow: "auto" }}
+    >
       {loading ? (
-       <Spinner />
+        <Spinner />
       ) : (
         <table className="table table-bordered table-striped ">
           <thead>
@@ -67,5 +111,4 @@ function ProductList() {
     </div>
   );
 }
-
 export default ProductList;
