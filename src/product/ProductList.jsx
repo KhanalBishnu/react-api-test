@@ -3,22 +3,31 @@ import AuthUser from "../AuthUser";
 import Spinner from "../components/Spinner";
 import ProductTableRow from "./ProductTableRow";
 import { toast } from "react-toastify";
+import Pagination from "../layout/Pagination";
 
 function ProductList() {
   const productURL = "/dashboard/products";
   const [products, setProducts] = useState();
   const [loading, setLoading] = useState(true);
+  
+  // for Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit=10;
 
   const { http } = AuthUser();
   useEffect(() => {
     getProductList();
-  }, []);
+  }, [currentPage]);
   const getProductList = () => {
     try {
-      http.get(productURL).then((res) => {
+      setLoading(true);
+      let productlist=`${productURL}/getList`;
+      http.post(productlist, { page: currentPage,limit:limit }).then((res) => {
         let data = res.data;
         if (data.response) {
           setProducts(data.products);
+          setTotalPages(data.totalQuries);
         } else {
           toast.success(data.message);
           console.log(data.message || "Something went wrong!");
@@ -74,6 +83,11 @@ function ProductList() {
       }
     })
   }
+  
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+};
+
 
   const renderListOfProducts = (products) => {
     return products?.map((product, index) => (
@@ -93,7 +107,7 @@ function ProductList() {
     >
       {loading ? (
         <Spinner />
-      ) : (
+      ) : (<>
         <table className="table table-bordered table-striped ">
           <thead>
             <tr>
@@ -107,6 +121,8 @@ function ProductList() {
           </thead>
           <tbody>{renderListOfProducts(products)}</tbody>
         </table>
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} limit={limit} />
+      </>
       )}
     </div>
   );
