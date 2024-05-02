@@ -13,9 +13,10 @@ export default function AuthUser(){
     const [token,setToken]=useState(getToken());
     const [user,setUser]=useState(getUser());
     const navigate=useNavigate();
-    const saveToken=(user,token)=>{
+    const saveToken=(user,token,expirationInMinutes)=>{
         localStorage.setItem('token',JSON.stringify(token));
         localStorage.setItem('user',JSON.stringify(user));
+        localStorage.setItem('expirationInMinutes',JSON.stringify(expirationInMinutes));
         setToken(token);
         setUser(user);
         navigate('/dashboard')
@@ -34,6 +35,19 @@ export default function AuthUser(){
             'Authorization':`Bearer ${token}`,
         }
     });
+
+    // for expired login 
+    const checkExpiration = () => {
+        const expirationDate = localStorage.getItem('expirationDate');
+        if (expirationDate) {
+            const currentDate = new Date();
+            const expired = new Date(expirationDate) < currentDate;
+            if (expired) {
+                localStorage.clear();
+                console.log('LocalStorage cleared due to expiration.');
+            }
+        }
+    };
     return {
         setAuthToken:saveToken,
         token,

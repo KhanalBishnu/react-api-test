@@ -45,7 +45,7 @@ function login() {
         setFormError("");
 
         if (data.response) {
-          setAuthToken(data.user, data.token);
+          setAuthToken(data.user, data.token,data.expirationInMinutes);
         } else if (data.message) {
           // Check if the message property is an object
           if (typeof data.message === "object") {
