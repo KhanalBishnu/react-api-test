@@ -11,6 +11,7 @@ import ProductList from "./product/ProductList";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import ExpiredLogin from "./auth/ExpiredLogin";
+import RoleAndPermisionLIst from './components/roleAndPermission/RoleAndPermisionLIst';
 
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
 
   return (
     <>
-    <ExpiredLogin />
+    {/* <ExpiredLogin /> */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -27,6 +28,8 @@ function App() {
         <Route path="/dashboard/*" element={<ProtectedRoute Component={Dashboard} />} >
           <Route path="add-product" element={<AddProduct />} />
           <Route path="products" element={<ProductList />} />
+          <Route  path="role-and-permission" element={ <RoleAndPermisionLIst />} />
+          
         </Route>
       </Routes>
     </>

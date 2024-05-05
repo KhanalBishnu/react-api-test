@@ -57,19 +57,9 @@ function AddProduct() {
             if(data.response){
               toast.success(data.message);
               navigator('/dashboard/products')
-            }else if(data.message){
-                if(typeof data.message==="object"){
-                  Object.keys(data.message).forEach((key)=>{
-                    data.message[key].forEach((err)=>{
-                      toast.error(err);
-                    })
-                  })
-                }
-              if(typeof data.message==="string"){
-                toast.error(data.message);
-              }
             }
           })
+          setBtnSpinner(false);
         }
       };
       return (

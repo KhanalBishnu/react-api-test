@@ -51,28 +51,16 @@ const handleSignupForm=()=>{
     setBtnSpinner(true)
     http.post('/register',formData).then((res)=>{
       let data=res.data;
-      setBtnSpinner(false)
       if(data.response){
         toast.success(data.message);
         navigate('/login')
         // setAuthToken(data.user,data.token)
-      }else if(data.message){
-        if(typeof data.message==="object"){
-          Object.keys(data.message).forEach((key)=>{
-            data.message[key].forEach((err)=>{
-              toast.error(err);
-            })
-          })
-        }
-        if(typeof data.message==="string"){
-          toast.error(data.message);
-        }
-      }else{
-
       }
     }).catch((error=>{
       console.log(error);
     }))
+    setBtnSpinner(false)
+
   }
  
 }

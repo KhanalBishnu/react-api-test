@@ -42,6 +42,14 @@ function Sidebar() {
               Add Note
             </Link>
           </li>
+          <li>
+            <Link to="/dashboard/role-and-permission" className={`nav-link text-white ${location.pathname==="/dashboard/role-and-permission"?'active':""}`}>
+              <svg className="bi me-2" width="16" height="16">
+                <use xlinkHref="#speedometer2"></use>
+              </svg>
+              Role And Permission
+            </Link>
+          </li>
         </ul>
       
       </div>

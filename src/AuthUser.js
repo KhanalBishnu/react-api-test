@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useState } from 'react';
 import {useNavigate} from "react-router-dom";
+import { toast } from 'react-toastify';
 export default function AuthUser(){
     const getToken=()=>{
         const getTokenStorage=localStorage.getItem('token');
@@ -35,6 +36,35 @@ export default function AuthUser(){
             'Authorization':`Bearer ${token}`,
         }
     });
+    http.interceptors.response.use(
+        (response) => {
+            if (response.status === 200 && response.data.response) {
+                return response;
+            } else if (response.data.message) {
+                if (typeof response.data.message === "object") {
+                    Object.values(response.data.message).forEach((errs) => {
+                        errs.forEach((err) => {
+                            toast.error(err);
+                        });
+                    });
+                } else if (typeof response.data.message === "string") {
+                    toast.error(response.data.message);
+                }
+            }
+            return Promise.reject(response); // Reject the promise for non-successful responses
+        },
+        (error) => {
+            if(error.response && error.response.data.type=='error' && error.response.data.status===401){
+                toast.error(data.message)
+                localStorage.clear();
+                navigate('/login')
+            }
+            else{
+                toast.error(error.message)
+            }
+            return Promise.reject(error);
+        }
+    );
 
     // for expired login 
     const checkExpiration = () => {
