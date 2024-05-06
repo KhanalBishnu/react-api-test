@@ -36,34 +36,18 @@ function login() {
       setPasswordValidation(false);
     }
     if (email != "" && email != null && password != "" && password != null) {
-      setBtnSpinner(true);
       let url = "/login";
+      setBtnSpinner(true);
       http.post(url, { email: email, password: password }).then((res) => {
         console.log(res.data);
-        // setAuthToken(res.data.)
         let data = res.data;
         setFormError("");
-
         if (data.response) {
-          setAuthToken(data.user, data.token,data.expirationInMinutes);
-        } else if (data.message) {
-          // Check if the message property is an object
-          if (typeof data.message === "object") {
-            // Iterate over the keys (field names) in the message object
-            Object.keys(data.message).forEach((key) => {
-              // Display each error message
-              data.message[key].forEach((errorMessage) => {
-                toast.error(errorMessage);
-              });
-            });
-          }
-          if(typeof data.message==='string'){
-            toast.error(data.message);
-          }
-        } else {
-          setFormError(data.message || "Something went wrong!");
+          setBtnSpinner(false);
+          setAuthToken(data.user, data.token,data.userPermission);
+        } else{
+          setBtnSpinner(false);
         }
-        setBtnSpinner(false);
       });
     }
   };
@@ -109,6 +93,7 @@ function login() {
               btnSpinner ? "bg-success" : ""
             }`}
             type="button"
+            disabled={btnSpinner}
           >
             {btnSpinner ? "Loging..." : "Log In"}
           </button>

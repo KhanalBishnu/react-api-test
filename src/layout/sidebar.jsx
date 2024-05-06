@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import AuthUser from "../AuthUser";
 function Sidebar() {
+  // const [permissions,setPermissions]=useState([]);
+  const {modulePermission}=AuthUser();
+  const hasViewRolePermission = modulePermission.includes('View|Role And Permission');
+
+
   return (
     <>
       <div
@@ -42,6 +48,8 @@ function Sidebar() {
               Add Note
             </Link>
           </li>
+          {
+            hasViewRolePermission &&
           <li>
             <Link to="/dashboard/role-and-permission" className={`nav-link text-white ${location.pathname==="/dashboard/role-and-permission"?'active':""}`}>
               <svg className="bi me-2" width="16" height="16">
@@ -50,6 +58,7 @@ function Sidebar() {
               Role And Permission
             </Link>
           </li>
+          }
         </ul>
       
       </div>

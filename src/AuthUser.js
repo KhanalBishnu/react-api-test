@@ -11,22 +11,26 @@ export default function AuthUser(){
         const getUSerStorage=localStorage.getItem('user');
         return JSON.parse(getUSerStorage)
     }
+    const getPermission=()=>{
+        const getPermissionStorage=localStorage.getItem('modulePermission');
+        return JSON.parse(getPermissionStorage)
+    }
     const [token,setToken]=useState(getToken());
     const [user,setUser]=useState(getUser());
+    const [modulePermission,setModulePermission]=useState(getPermission());
     const navigate=useNavigate();
-    const saveToken=(user,token,expirationInMinutes)=>{
+    const saveToken=(user,token,permission)=>{
         localStorage.setItem('token',JSON.stringify(token));
         localStorage.setItem('user',JSON.stringify(user));
-        localStorage.setItem('expirationInMinutes',JSON.stringify(expirationInMinutes));
+        localStorage.setItem('modulePermission',JSON.stringify(permission));
         setToken(token);
         setUser(user);
+        setModulePermission(permission);
         navigate('/dashboard')
     }
     const logout=()=>{
         localStorage.clear();
     }
-   
-
     const http=axios.create({
         baseURL:"http://localhost:8000/api",
         // baseURL:"http://192.168.1.84:8000/api",
@@ -36,6 +40,7 @@ export default function AuthUser(){
             'Authorization':`Bearer ${token}`,
         }
     });
+   
     http.interceptors.response.use(
         (response) => {
             if (response.status === 200 && response.data.response) {
@@ -51,39 +56,32 @@ export default function AuthUser(){
                     toast.error(response.data.message);
                 }
             }
-            return Promise.reject(response); // Reject the promise for non-successful responses
+            // return Promise.reject(response);
+            return response;
         },
         (error) => {
-            if(error.response && error.response.data.type=='error' && error.response.data.status===401){
-                toast.error(data.message)
+            if (error.response && error.response.data.type == 'error' && error.response.data.status === 401) {
+                toast.error(error.response.data.message)
                 localStorage.clear();
                 navigate('/login')
-            }
-            else{
+            }else if (error.response && error.response.data.type == 'error' && error.response.data.status === 500) {
+                toast.error('Network Error ')
+                return response
+            } 
+             else {
                 toast.error(error.message)
+                return Promise.reject(error);
             }
-            return Promise.reject(error);
         }
     );
-
-    // for expired login 
-    const checkExpiration = () => {
-        const expirationDate = localStorage.getItem('expirationDate');
-        if (expirationDate) {
-            const currentDate = new Date();
-            const expired = new Date(expirationDate) < currentDate;
-            if (expired) {
-                localStorage.clear();
-                console.log('LocalStorage cleared due to expiration.');
-            }
-        }
-    };
+   
     return {
         setAuthToken:saveToken,
         token,
         user,
         getToken,
         http,
-        logout
+        logout,
+        modulePermission,
     }
 }

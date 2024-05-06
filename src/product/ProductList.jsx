@@ -28,9 +28,6 @@ function ProductList() {
         if (data.response) {
           setProducts(data.products);
           setTotalPages(data.totalQuries);
-        } else {
-          toast.success(data.message);
-          console.log(data.message || "Something went wrong!");
         }
         setLoading(false);
       });
@@ -54,17 +51,6 @@ function ProductList() {
         //   }
         //   return product;
         // }));
-      } else if (data.message) {
-        if (typeof data.message === "object") {
-          Object.keys(data.message).forEach((key) => {
-            data.message[key].forEach((err) => {
-              toast.error(err);
-            });
-          });
-        }
-        if (typeof data.message == "string") {
-          toast.error(data.message);
-        }
       }
     });
   };
@@ -78,8 +64,6 @@ function ProductList() {
       if(data.response){
         toast.success(data.message);
         setProducts(products.filter((product) => product.id !== productId));
-      }else{
-        toast.error(data.message);
       }
     })
   }
@@ -113,7 +97,6 @@ function ProductList() {
             <tr>
               <th>SN</th>
               <th>Title</th>
-              {/* <th>Discription</th> */}
               <th>Image</th>
               <th>Tags</th>
               <th>Action</th>
