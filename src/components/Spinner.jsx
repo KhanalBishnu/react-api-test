@@ -1,13 +1,16 @@
 import React from "react";
 import AuthUser from "../AuthUser";
 
-function Spinner() {
+function Spinner({content}) {
   return (
     <center>
+    <div className="overlay">
       <div className="spinner-border" role="status">
-        <span className="visually-hidden">Loading...</span>
+        <span className="visually-hidden">Submitting...</span>
       </div>
-    </center>
+      <div className="message mt-5">{content ?content:'Submitting'}...</div>
+    </div>
+  </center>
   );
 }
 

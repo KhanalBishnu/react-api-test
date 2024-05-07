@@ -11,27 +11,29 @@ import ProductList from "./product/ProductList";
 import RoleAndPermisionLIst from './components/roleAndPermission/RoleAndPermisionLIst';
 import AuthUser from "./AuthUser";
 import NotFound from "./components/Constant/NotFound";
+import PermissionConstant from "./components/Constant/PermissionConstant";
 
 
 function App() {
-  const {modulePermission}=AuthUser();
-  const hasViewRolePermission = modulePermission && modulePermission.includes('View|Role And Permission') || null ;
+  const {hasViewRolePermission}=PermissionConstant();
   return (
     <>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/sign-up" element={<Signup />} />
-        <Route path="/dashboard/*" element={<ProtectedRoute Component={Dashboard} />} >
+        <Route path="/dashboard/" element={<ProtectedRoute Component={Dashboard} />} >
+          <Route path="products">
           <Route path="add-product" element={<AddProduct />} />
+            <Route index element={<ProductList />} />
+          </Route>
           <Route path="products" element={<ProductList />} />
           {
-            hasViewRolePermission ?
-            <Route  path="role-and-permission" element={ <RoleAndPermisionLIst />} />:
-            <Route path="*" element={<NotFound />} />
+            hasViewRolePermission &&
+            <Route  path="role-and-permission" element={ <RoleAndPermisionLIst />} />
           }
         </Route>
-        <Route path="/dashboard/*" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
 
       </Routes>
     </>

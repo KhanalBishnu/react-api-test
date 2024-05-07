@@ -30,6 +30,7 @@ export default function AuthUser(){
     }
     const logout=()=>{
         localStorage.clear();
+        navigate('/')
     }
     const http=axios.create({
         baseURL:"http://localhost:8000/api",
@@ -56,7 +57,7 @@ export default function AuthUser(){
                     toast.error(response.data.message);
                 }
             }
-            // return Promise.reject(response);
+            return Promise.reject(response);
             return response;
         },
         (error) => {

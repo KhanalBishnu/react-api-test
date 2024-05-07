@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import AuthUser from "../AuthUser";
+import PermissionConstant from "../components/Constant/PermissionConstant";
 function Sidebar() {
-  // const [permissions,setPermissions]=useState([]);
-  const {modulePermission}=AuthUser();
-  const hasViewRolePermission = modulePermission.includes('View|Role And Permission');
-
-
+  const {hasViewRolePermission}=PermissionConstant();
+  const navLinks = [
+    { to: "/dashboard", label: "Dashboard" },
+    { to: "/dashboard/products", label: "View Note" },
+    { to: "/dashboard/products/add-product", label: "Add Note" },
+    hasViewRolePermission && { to: "/dashboard/role-and-permission", label: "Role And Permission" }
+  ];
   return (
     <>
       <div
@@ -23,43 +25,20 @@ function Sidebar() {
           <span className="fs-4">Dummy Post</span>
         </a>
         <hr />
-        <ul className="nav nav-pills flex-column mb-auto">
-          <li className="nav-item">
-            <Link to="/dashboard" className={`nav-link text-white  ${location.pathname==="/dashboard"?'active':""}`} aria-current="page">
-              <svg className="bi me-2" width="16" height="16">
-                <use xlinkHref="#home"></use>
-              </svg>
-              DashBoard
-            </Link>
-          </li>
-          <li>
-            <Link to="/dashboard/products" className={`nav-link text-white ${location.pathname==="/dashboard/products"?'active':""}`}>
-              <svg className="bi me-2" width="16" height="16">
-                <use xlinkHref="#speedometer2"></use>
-              </svg>
-              View Note
-            </Link>
-          </li>
-          <li>
-            <Link to="/dashboard/add-product" className={`nav-link text-white ${location.pathname==="/dashboard/add-product"?'active':""}`}>
-              <svg className="bi me-2" width="16" height="16">
-                <use xlinkHref="#speedometer2"></use>
-              </svg>
-              Add Note
-            </Link>
-          </li>
-          {
-            hasViewRolePermission &&
-          <li>
-            <Link to="/dashboard/role-and-permission" className={`nav-link text-white ${location.pathname==="/dashboard/role-and-permission"?'active':""}`}>
-              <svg className="bi me-2" width="16" height="16">
-                <use xlinkHref="#speedometer2"></use>
-              </svg>
-              Role And Permission
-            </Link>
-          </li>
-          }
-        </ul>
+       <ul className="nav nav-pills flex-column mb-auto">
+        {navLinks.map((link) => (
+         link && (
+            <li key={link.to} className="nav-item">
+              <Link to={link.to} className={`nav-link text-white ${location.pathname === link.to ? 'active' : ''}`} aria-current="page">
+                <svg className="bi me-2" width="16" height="16">
+                  <use xlinkHref="#home"></use>
+                </svg>
+                {link.label}
+              </Link>
+            </li>
+          )
+        ))}
+      </ul>
       
       </div>
     </>

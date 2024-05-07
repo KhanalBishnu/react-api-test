@@ -48,6 +48,8 @@ function login() {
         } else{
           setBtnSpinner(false);
         }
+      }).finally(()=>{
+        setBtnSpinner(false);
       });
     }
   };

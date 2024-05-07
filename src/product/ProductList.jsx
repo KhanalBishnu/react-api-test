@@ -90,7 +90,7 @@ function ProductList() {
       style={{ height: "92vh", overflow: "auto" }}
     >
       {loading ? (
-        <Spinner />
+        <Spinner content="Product Listing" />
       ) : (<>
         <table className="table table-bordered table-striped ">
           <thead>
