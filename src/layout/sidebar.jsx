@@ -27,7 +27,8 @@ function Sidebar() {
         <hr />
        <ul className="nav nav-pills flex-column mb-auto">
         {navLinks.map((link) => (
-         link && (
+          
+         (link && 
             <li key={link.to} className="nav-item">
               <Link to={link.to} className={`nav-link text-white ${location.pathname === link.to ? 'active' : ''}`} aria-current="page">
                 <svg className="bi me-2" width="16" height="16">
