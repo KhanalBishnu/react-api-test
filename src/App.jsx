@@ -28,10 +28,12 @@ function App() {
             <Route index element={<ProductList />} />
           </Route>
           <Route path="products" element={<ProductList />} />
+          <Route path="role-and-permission">
           {
             hasViewRolePermission &&
-            <Route  path="role-and-permission" element={ <RoleAndPermisionLIst />} />
+            <Route index element={ <RoleAndPermisionLIst />} />
           }
+          </Route>
         </Route>
         <Route path="*" element={<NotFound />} />
 

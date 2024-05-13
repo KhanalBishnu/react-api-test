@@ -43,7 +43,9 @@ export default function AuthUser(){
     });
    
     http.interceptors.response.use(
+        
         (response) => {
+           
             if (response.status === 200 && response.data.response) {
                 return response;
             } else if (response.data.message) {

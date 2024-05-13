@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import PermissionConstant from "../components/Constant/PermissionConstant";
 function Sidebar() {
-  const {hasViewRolePermission}=PermissionConstant();
+  const { hasViewRolePermission } = PermissionConstant();
   const navLinks = [
     { to: "/dashboard", label: "Dashboard" },
     { to: "/dashboard/products", label: "View Note" },
     { to: "/dashboard/products/add-product", label: "Add Note" },
-    hasViewRolePermission && { to: "/dashboard/role-and-permission", label: "Role And Permission" }
-  ];
+    hasViewRolePermission && { to: "/dashboard/role-and-permission", label: "Role And Permission" },
+  ].filter(Boolean);
+  
   return (
     <>
       <div
@@ -27,17 +28,14 @@ function Sidebar() {
         <hr />
        <ul className="nav nav-pills flex-column mb-auto">
         {navLinks.map((link) => (
-          
-         (link && 
-            <li key={link.to} className="nav-item">
+         (<li key={link.to} className="nav-item">
               <Link to={link.to} className={`nav-link text-white ${location.pathname === link.to ? 'active' : ''}`} aria-current="page">
                 <svg className="bi me-2" width="16" height="16">
                   <use xlinkHref="#home"></use>
                 </svg>
                 {link.label}
               </Link>
-            </li>
-          )
+          </li>)
         ))}
       </ul>
       
