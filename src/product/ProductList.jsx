@@ -56,7 +56,6 @@ function ProductList() {
   };
 
   const handleDeleteProduct=(productId)=>{
-    console.log(productId);
     setLoading(true);
     http.get(`${productURL}/delete/`+productId).then((res)=>{
       let data=res.data;

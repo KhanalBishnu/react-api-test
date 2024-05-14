@@ -45,10 +45,12 @@ export default function AuthUser(){
     http.interceptors.response.use(
         
         (response) => {
-           
             if (response.status === 200 && response.data.response) {
+                if(response.data.message!=null && response.data.message!='' && response.data.message!=undefined){
+                    toast.success(response.data.message);
+                }
                 return response;
-            } else if (response.data.message) {
+            }else if (response.data.message) {
                 if (typeof response.data.message === "object") {
                     Object.values(response.data.message).forEach((errs) => {
                         errs.forEach((err) => {

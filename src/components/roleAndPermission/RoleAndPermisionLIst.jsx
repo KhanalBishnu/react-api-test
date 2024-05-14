@@ -1,42 +1,45 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Modal, Button, Form } from "react-bootstrap";
-import AuthUser from '../../AuthUser';
-import RenderListOfRole from './RenderListOfRole';
-
+import AuthUser from "../../AuthUser";
+import RenderListOfRole from "./RenderListOfRole";
+import Spinner from "../Spinner";
 
 function RoleAndPermisionLIst() {
-  debugger
-  const RoleUrl='/dashboard/role-and-permission';
-  const [roleName, setRoleName] = useState('');
+  const RoleUrl = "/dashboard/role-and-permission";
+  const [roleName, setRoleName] = useState("");
   const [error, setError] = useState(false);
   const [roles, setRoles] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const handleCloseModal = () => setShowModal(false);
   const handleOpenModal = () => setShowModal(true);
-  const {http}=AuthUser();
+  const { http } = AuthUser();
 
-  useEffect(()=>{
-    debugger
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
     getAllRoleList();
-  },[]);
-  const getAllRoleList=()=>{
-    http.get(RoleUrl).then((res)=>{
+  }, []);
+  const getAllRoleList = () => {
+    http.get(RoleUrl).then((res) => {
       setRoles(res.data.data);
-      console.log(res);
-    })
-  }
-  const handleStoreRole=()=>{
-    if(roleName=="" || roleName==null ||roleName==undefined){
-        setError(true);    
-    }else{
+      setLoading(false)
+    });
+  };
+  const handleStoreRole = () => {
+    debugger;
+    if (roleName == "" || roleName == null || roleName == undefined) {
+      setError(true);
+    } else {
       setError(false);
-      handleCloseModal()
-      http.post(`${RoleUrl}/create`,{name:roleName}).then((res)=>{
-        console.log(res);
+      handleCloseModal();
+      http.post(`${RoleUrl}/store`, { name: roleName }).then((res) => {
+        let newRoleData = res.data.data;
+        const updatedData = [...roles, newRoleData];
+        setRoles(updatedData);
       });
     }
-  }
+  };
 
   const renderListOfRoles = (roles) => {
     return roles?.map((role, index) => (
@@ -44,57 +47,77 @@ function RoleAndPermisionLIst() {
         key={role.id}
         index={index}
         role={role}
-     /*    onUpdate={handleUpdate}
+        deleteRole={deleteRole}
+        /*    onUpdate={handleUpdate}
         onDelete={handleDeleteProduct} */
       />
     ));
   };
+  // delete role
+  const deleteRole = (roleId) => {
+    http.get(`${RoleUrl}/delete/${roleId}`).then((res)=>{
+      let data=res.data.data;
+      setRoles(roles.filter((role) =>role.id!==roleId));
+    })
+  };
   return (
-    <div>
-      <div className="add-role">
-        <Link onClick={handleOpenModal} className='btn btn-primary btn-sm float-end my-2'>Add Role</Link>
-      </div>
-      <table className='table table-bordered table-striped'>
-        <thead>
-          <tr>
-            <th>SN</th>
-            <th>Role</th>
-            <th>Permission</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>{renderListOfRoles(roles)}</tbody>
-      </table>
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Role</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="formTitle">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="name"
-                onChange={(e)=>setRoleName(setRoleName)}
-                className={`${
-                  error? "border-danger" : ""
-                } border rounded`}
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleStoreRole}>
-            Add
-          </Button>
-        </Modal.Footer>
-      </Modal>
+    <div
+      className="p-4 bg-gradient"
+      style={{ height: "92vh", overflow: "auto" }}
+    >
+      {loading ? (
+        <Spinner content="Role Listing" />
+      ) : (
+        <div>
+          <div className="add-role">
+            <Link
+              onClick={handleOpenModal}
+              className="btn btn-primary btn-sm float-end my-2"
+            >
+              Add Role
+            </Link>
+          </div>
+          <table className="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>SN</th>
+                <th>Role</th>
+                <th>Permission</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>{renderListOfRoles(roles)}</tbody>
+          </table>
+          <Modal show={showModal} onHide={handleCloseModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>Add Role</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group controlId="formTitle">
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    onChange={(e) => setRoleName(e.target.value)}
+                    className={`${error ? "border-danger" : ""} border rounded`}
+                  />
+                </Form.Group>
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseModal}>
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={handleStoreRole}>
+                Add
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
-export default RoleAndPermisionLIst
+export default RoleAndPermisionLIst;
