@@ -12,8 +12,9 @@ export default function AuthUser(){
         return JSON.parse(getUSerStorage)
     }
     const getPermission=()=>{
-        const getPermissionStorage=localStorage.getItem('modulePermission');
-        return JSON.parse(getPermissionStorage)
+        const getPermissionStorage=localStorage.getItem('modulePermission') ?JSON.parse(localStorage.getItem('modulePermission') ):[];
+        
+        return getPermissionStorage;
     }
     const [token,setToken]=useState(getToken());
     const [user,setUser]=useState(getUser());

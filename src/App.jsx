@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import Home from "./components/Home";
 import Login from "./auth/Login";
 import Dashboard from "./auth/Dashboard";
@@ -9,36 +9,35 @@ import ProtectedRoute from "./ProtectedRoute";
 import AddProduct from "./product/AddProduct";
 import ProductList from "./product/ProductList";
 import RoleAndPermisionLIst from './components/roleAndPermission/RoleAndPermisionLIst';
-import AuthUser from "./AuthUser";
 import NotFound from "./components/Constant/NotFound";
-import PermissionConstant from "./components/Constant/PermissionConstant";
+import PermissionProvider, { usePermissions } from "./context/PermissionProvider";
 
+function AppRoutes() {
+  const { hasViewRolePermission } = usePermissions();
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/sign-up" element={<Signup />} />
+      <Route path="/dashboard" element={<ProtectedRoute Component={Dashboard} />}>
+        <Route path="products">
+          <Route path="add-product" element={<AddProduct />} />
+          <Route index element={<ProductList />} />
+        </Route>
+        {hasViewRolePermission && (
+          <Route path="role-and-permission" element={<RoleAndPermisionLIst />} />
+        )}
+      </Route>
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+}
 
 function App() {
-  const {hasViewRolePermission}=PermissionConstant();
   return (
-    <>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/sign-up" element={<Signup />} />
-        <Route path="/dashboard/" element={<ProtectedRoute Component={Dashboard} />} >
-          <Route path="products">
-          <Route path="add-product" element={<AddProduct />} />
-            <Route index element={<ProductList />} />
-          </Route>
-          <Route path="products" element={<ProductList />} />
-          <Route path="role-and-permission">
-          {
-            hasViewRolePermission &&
-            <Route index element={ <RoleAndPermisionLIst />} />
-          }
-          </Route>
-        </Route>
-        <Route path="*" element={<NotFound />} />
-
-      </Routes>
-    </>
+      <PermissionProvider>
+        <AppRoutes />
+      </PermissionProvider>
   );
 }
 

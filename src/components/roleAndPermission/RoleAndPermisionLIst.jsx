@@ -16,7 +16,6 @@ function RoleAndPermisionLIst() {
   const { http } = AuthUser();
 
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     getAllRoleList();
   }, []);
@@ -48,6 +47,7 @@ function RoleAndPermisionLIst() {
         index={index}
         role={role}
         deleteRole={deleteRole}
+        RoleUrl={RoleUrl}
         /*    onUpdate={handleUpdate}
         onDelete={handleDeleteProduct} */
       />
@@ -60,6 +60,8 @@ function RoleAndPermisionLIst() {
       setRoles(roles.filter((role) =>role.id!==roleId));
     })
   };
+
+  
   return (
     <div
       className="p-4 bg-gradient"
