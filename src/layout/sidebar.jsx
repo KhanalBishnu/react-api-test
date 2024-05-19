@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import PermissionConstant from "../components/Constant/PermissionConstant";
 function Sidebar() {
-  const { hasViewRolePermission } = PermissionConstant();
+  const hasViewRolePermission = PermissionConstant('View|Role And Permission');
   const navLinks = [
     { to: "/dashboard", label: "Dashboard" },
     { to: "/dashboard/products", label: "View Note" },

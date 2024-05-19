@@ -73,7 +73,7 @@ useEffect(() => {
   if (token) {
     navigate("/dashboard");
   }
-});
+},[]);
   return (
     <>
     <Header />

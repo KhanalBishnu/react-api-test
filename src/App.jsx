@@ -10,10 +10,11 @@ import AddProduct from "./product/AddProduct";
 import ProductList from "./product/ProductList";
 import RoleAndPermisionLIst from './components/roleAndPermission/RoleAndPermisionLIst';
 import NotFound from "./components/Constant/NotFound";
-import PermissionProvider, { usePermissions } from "./context/PermissionProvider";
+import PermissionConstant from "./components/Constant/PermissionConstant";
+import { useEffect, useState } from "react";
+import PermissionRouteProtector from "./components/Constant/PermissionRouteProtector";
 
-function AppRoutes() {
-  const { hasViewRolePermission } = usePermissions();
+function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -24,20 +25,13 @@ function AppRoutes() {
           <Route path="add-product" element={<AddProduct />} />
           <Route index element={<ProductList />} />
         </Route>
-        {hasViewRolePermission && (
-          <Route path="role-and-permission" element={<RoleAndPermisionLIst />} />
-        )}
+        <Route path="role-and-permission" element={<PermissionRouteProtector 
+          Component={RoleAndPermisionLIst} permission="View|Role And Permission" />}>
+
+        </Route>
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
-  );
-}
-
-function App() {
-  return (
-      <PermissionProvider>
-        <AppRoutes />
-      </PermissionProvider>
   );
 }
 

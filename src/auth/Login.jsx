@@ -11,7 +11,7 @@ function login() {
     if (token) {
       navigate("/dashboard");
     }
-  });
+  },[]);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

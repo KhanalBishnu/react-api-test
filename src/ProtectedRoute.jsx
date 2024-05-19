@@ -10,7 +10,7 @@ function ProtectedRoute(props) {
     if (!token) {
       navigate("/login");
     }
-  });
+  },[]);
 
   return (
     <>

@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import { Modal, Button, Form } from "react-bootstrap";
 import AuthUser from '../../AuthUser';
 
-function RenderListOfRole({ index, role, deleteRole, RoleUrl, permissionList }) {
+function RenderListOfRole({ index, role, deleteRole, RoleUrl, loadingFunction }) {
     const { http } = AuthUser();
     const [newRole, setNewRole] = useState(role.name);
     const [errors, setErrors] = useState(false);
     const [rolePermissions, setRolePermissions] = useState([]);
+    const [allPermission,setAllPermission]=useState([]);
     const [modalContent, setModalContent] = useState(''); // 'edit' or 'permissions'
 
     const [showModal, setShowModal] = useState(false);
@@ -14,7 +15,21 @@ function RenderListOfRole({ index, role, deleteRole, RoleUrl, permissionList }) 
     const handleOpenModal = (content) => {
         setModalContent(content);
         setShowModal(true);
+
+
     };
+    const editRolePermission= async (content,roleId)=>{
+        try {
+            const res=await http.get(`${RoleUrl}/getPermissionList/${roleId}`);
+            const data=res.data.data;
+            setAllPermission(data.modules)
+            setSelectedPermissions(data.permissionIds);
+            handleOpenModal(content);
+
+        } catch (error) {
+            console.error('Failed to fetch permissions:', error);
+        }
+    }
 
     const handleDeleteRole = () => {
         if (window.confirm("Are you sure you want to delete this role?")) {
@@ -33,17 +48,47 @@ function RenderListOfRole({ index, role, deleteRole, RoleUrl, permissionList }) 
       }
   };
 
+//   for edit permission 
+    const [selectedPermissions, setSelectedPermissions] = useState([]);
+    const handleCheckboxChange = (event, permissionId) => {
+        const { checked } = event.target;
+    
+        if (checked) {
+            setSelectedPermissions(prevState => [...prevState, permissionId]);
+        } else {
+            setSelectedPermissions(prevState => prevState.filter(id => id!== permissionId));
+        }
+        
+    };
+
+    const handleUpdateRolePermission=(roleId)=>{
+        // console.log(selectedPermissions);
+        loadingFunction(true,'Updating Role...');
+        try {
+            http.post(`${RoleUrl}/update`,{name:newRole,permissionIds:selectedPermissions,id:roleId}).then((res)=>{
+                setShowModal(true);
+                loadingFunction(false);
+
+
+            })
+        } catch (error) {
+            console.error('Failed to fetch permissions:', error);
+
+        }
+    }
+
+
     return (
         <tr>
             <td>{index + 1}</td>
             <td>{role.name}</td>
             <td>
-                <Button variant="primary" className="mx-1" onClick={handlePermissionListView(role.id)}>
+                <Button variant="primary" className="mx-1" onClick={()=>handlePermissionListView(role.id)}>
                     Permission
                 </Button>
             </td>
             <td>
-                <Button variant="primary" onClick={() => handleOpenModal('edit')} className="mx-1">
+                <Button variant="primary" onClick={() => editRolePermission('edit',role.id)} className="mx-1">
                     Edit
                 </Button>
                 {role.name !== "Admin" &&
@@ -52,9 +97,9 @@ function RenderListOfRole({ index, role, deleteRole, RoleUrl, permissionList }) 
                     </Button>
                 }
             </td>
-            <Modal show={showModal} onHide={handleCloseModal}>
+            <Modal show={showModal} onHide={handleCloseModal} size='lg'>
                 <Modal.Header closeButton>
-                    <Modal.Title>{modalContent === 'edit' ? 'Role Edit' : "Role Permission List"}</Modal.Title>
+                    <Modal.Title>{modalContent === 'edit' ? 'Role Edit' : "Permission List"}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     {modalContent === 'edit' ? (
@@ -70,13 +115,42 @@ function RenderListOfRole({ index, role, deleteRole, RoleUrl, permissionList }) 
                                     className={`${errors ? "border-danger" : ""} border rounded`}
                                 />
                             </Form.Group>
+                            <Form.Group controlId="formTitle" className='mt-3'>
+                                <Form.Label>Edit Permission</Form.Label>
+                                {
+                                    allPermission.length>0 && allPermission.map((module,index)=>(
+                                    <div className="row">
+                                        <label className='text-center mb-2 bg-secondary'>{module.title}</label>
+                                        <div className="col-md-12 d-flex justify-content-center align-items-center gap-4 p-2" >
+                                            {
+                                                module.permissions.length>0 && module.permissions.map((per,i)=>(
+                                                    <div className="permissionCheck mx-3">
+                                                        <input type="checkbox" className='mx-2' 
+                                                        name="permissions[]" id={`permission-${i}`} 
+                                                        value={per.id} 
+                                                        onChange={(event) => handleCheckboxChange(event, per.id)}
+                                                        checked={selectedPermissions.includes(per.id)}/>
+                                                        <span>{per.name.split('|')[0]}</span>
+                                                    </div>
+                                                ))
+                                            }
+                                            
+                                        </div>
+                                    </div>
+                                    ))
+                                }
+                                
+                            </Form.Group>
                         </Form>
                     ) : (
-                        <ul>
-                            {rolePermissions.map((perm, idx) => (
-                                <li key={idx}>{perm}</li>
-                            ))}
-                        </ul>
+                        <div className='row'> 
+                            {rolePermissions.length>0?rolePermissions.map((perm, idx) => (
+                                <div key={idx} className="col-md-6 mt-1">
+                                    <span key={idx}>{idx+1}. {perm}</span> 
+                                </div>
+                            ))
+                        :<div><center>Permission Not Found</center></div>}
+                        </div>
                     )}
                 </Modal.Body>
                 <Modal.Footer>
@@ -84,7 +158,7 @@ function RenderListOfRole({ index, role, deleteRole, RoleUrl, permissionList }) 
                         Cancel
                     </Button>
                     {modalContent === 'edit' && (
-                        <Button variant="primary">
+                        <Button variant="primary" onClick={()=>handleUpdateRolePermission(role.id)}>
                             Update
                         </Button>
                     )}

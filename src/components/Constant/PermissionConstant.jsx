@@ -1,12 +1,10 @@
-import React from 'react'
-import AuthUser from '../../AuthUser'
-
- export default function PermissionConstant() {
-    const {modulePermission}=AuthUser();
-    const hasViewRolePermission = modulePermission && modulePermission.includes('View|Role And Permission')?true:false ;
-
-    return {
-        hasViewRolePermission
-    }
+const PermissionConstant = (requiredPermission) => {
+    const allRolePermissions = localStorage.getItem('modulePermission')
+      ? JSON.parse(localStorage.getItem('modulePermission'))
+      : [];
   
-}
+    return allRolePermissions.includes(requiredPermission);
+  };
+  
+  export default PermissionConstant;
+  

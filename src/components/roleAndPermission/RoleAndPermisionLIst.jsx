@@ -8,6 +8,8 @@ import Spinner from "../Spinner";
 function RoleAndPermisionLIst() {
   const RoleUrl = "/dashboard/role-and-permission";
   const [roleName, setRoleName] = useState("");
+
+  const [SpinnerContent, setSpinnerContent] = useState("Role Listing");
   const [error, setError] = useState(false);
   const [roles, setRoles] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -48,6 +50,7 @@ function RoleAndPermisionLIst() {
         role={role}
         deleteRole={deleteRole}
         RoleUrl={RoleUrl}
+        loadingFunction={loadingFunction}
         /*    onUpdate={handleUpdate}
         onDelete={handleDeleteProduct} */
       />
@@ -60,6 +63,11 @@ function RoleAndPermisionLIst() {
       setRoles(roles.filter((role) =>role.id!==roleId));
     })
   };
+  const loadingFunction=(loadingData,spinnerContentData)=>{
+    setSpinnerContent(spinnerContentData);
+    setLoading(loadingData);
+    
+  }
 
   
   return (
@@ -68,7 +76,7 @@ function RoleAndPermisionLIst() {
       style={{ height: "92vh", overflow: "auto" }}
     >
       {loading ? (
-        <Spinner content="Role Listing" />
+        <Spinner content={SpinnerContent} />
       ) : (
         <div>
           <div className="add-role">

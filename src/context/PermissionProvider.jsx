@@ -1,23 +1,22 @@
 import React, { useContext, useEffect, useState } from 'react';
 import permissionContext from './permissionContext';
-import AuthUser from '../AuthUser';
 
 function PermissionProvider({ children }) {
-  const getPermissionStorage=localStorage.getItem('modulePermission') ?JSON.parse(localStorage.getItem('modulePermission') ):[];
+  const [permissions, setPermissions] = useState([]);
 
-  const [permissions, setPermissions] = useState({
-    hasViewRolePermission: false,
-  });
   useEffect(() => {
-    if (getPermissionStorage) {
-      setPermissions({
-        hasViewRolePermission: getPermissionStorage.includes('View|Role And Permission'),
-      });
+    const storedPermissions = localStorage.getItem('modulePermission');
+    if (storedPermissions) {
+      setPermissions(JSON.parse(storedPermissions));
     }
   }, []);
 
+  const hasPermission = (permission) => {
+    return permissions.includes(permission);
+  };
+
   return (
-    <permissionContext.Provider value={permissions}>
+    <permissionContext.Provider value={{ permissions, hasPermission }}>
       {children}
     </permissionContext.Provider>
   );
@@ -32,3 +31,4 @@ export const usePermissions = () => {
 };
 
 export default PermissionProvider;
+
