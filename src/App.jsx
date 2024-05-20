@@ -13,6 +13,7 @@ import NotFound from "./components/Constant/NotFound";
 import PermissionConstant from "./components/Constant/PermissionConstant";
 import { useEffect, useState } from "react";
 import PermissionRouteProtector from "./components/Constant/PermissionRouteProtector";
+import UserList from "./components/userManagement/UserList";
 
 function App() {
   return (
@@ -27,6 +28,10 @@ function App() {
         </Route>
         <Route path="role-and-permission" element={<PermissionRouteProtector 
           Component={RoleAndPermisionLIst} permission="View|Role And Permission" />}>
+
+        </Route>
+        <Route path="user-management" element={<PermissionRouteProtector 
+          Component={UserList} permission="View|User Management" />}>
 
         </Route>
       </Route>

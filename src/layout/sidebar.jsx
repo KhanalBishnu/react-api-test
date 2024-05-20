@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import PermissionConstant from "../components/Constant/PermissionConstant";
 function Sidebar() {
   const hasViewRolePermission = PermissionConstant('View|Role And Permission');
+  const hasViewUserManageMent = PermissionConstant('View|User Management');
   const navLinks = [
     { to: "/dashboard", label: "Dashboard" },
     { to: "/dashboard/products", label: "View Note" },
     { to: "/dashboard/products/add-product", label: "Add Note" },
     hasViewRolePermission && { to: "/dashboard/role-and-permission", label: "Role And Permission" },
+    hasViewUserManageMent && { to: "/dashboard/user-management", label: "User Management" },
   ].filter(Boolean);
   
   return (

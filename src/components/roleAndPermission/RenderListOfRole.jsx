@@ -131,7 +131,7 @@ function RenderListOfRole({ index, role, deleteRole, RoleUrl, loadingFunction })
                                             {
                                                 module.permissions.length>0 && module.permissions.map((per,i)=>(
                                                     <div className="permissionCheck mx-3">
-                                      Admin                  <input type="checkbox" className='mx-2' 
+                                                      <input type="checkbox" className='mx-2' 
                                                         name="permissionids" id={`permission-${i}`} 
                                                         value={per.id} 
                                                         onChange={(event) => handleCheckboxChange(event, per.id)}
