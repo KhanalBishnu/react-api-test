@@ -9,6 +9,8 @@ function RenderListOfRole({ index, role, deleteRole, RoleUrl, loadingFunction })
     const [rolePermissions, setRolePermissions] = useState([]);
     const [allPermission,setAllPermission]=useState([]);
     const [modalContent, setModalContent] = useState(''); // 'edit' or 'permissions'
+    const [selectedPermissions, setSelectedPermissions] = useState([]);
+
 
     const [showModal, setShowModal] = useState(false);
     const handleCloseModal = () => setShowModal(false);
@@ -39,6 +41,7 @@ function RenderListOfRole({ index, role, deleteRole, RoleUrl, loadingFunction })
 
     const handlePermissionListView = async (roleId) => {
       try {
+
           const res = await http.get(`${RoleUrl}/getRolePermission/${roleId}`);
           const data = res.data.data;
           setRolePermissions(data);
@@ -49,7 +52,6 @@ function RenderListOfRole({ index, role, deleteRole, RoleUrl, loadingFunction })
   };
 
 //   for edit permission 
-    const [selectedPermissions, setSelectedPermissions] = useState([]);
     const handleCheckboxChange = (event, permissionId) => {
         const { checked } = event.target;
     
@@ -62,10 +64,14 @@ function RenderListOfRole({ index, role, deleteRole, RoleUrl, loadingFunction })
     };
 
     const handleUpdateRolePermission=(roleId)=>{
+        console.log(selectedPermissions);
+        debugger
+        
         // console.log(selectedPermissions);
         loadingFunction(true,'Updating Role...');
+        
         try {
-            http.post(`${RoleUrl}/update`,{name:newRole,permissionIds:selectedPermissions,id:roleId}).then((res)=>{
+            http.post(`${RoleUrl}/update`,{name:newRole,permissionids:selectedPermissions,id:roleId}).then((res)=>{
                 setShowModal(true);
                 loadingFunction(false);
 
@@ -125,12 +131,12 @@ function RenderListOfRole({ index, role, deleteRole, RoleUrl, loadingFunction })
                                             {
                                                 module.permissions.length>0 && module.permissions.map((per,i)=>(
                                                     <div className="permissionCheck mx-3">
-                                                        <input type="checkbox" className='mx-2' 
-                                                        name="permissions[]" id={`permission-${i}`} 
+                                      Admin                  <input type="checkbox" className='mx-2' 
+                                                        name="permissionids" id={`permission-${i}`} 
                                                         value={per.id} 
                                                         onChange={(event) => handleCheckboxChange(event, per.id)}
                                                         checked={selectedPermissions.includes(per.id)}/>
-                                                        <span>{per.name.split('|')[0]}</span>
+                                                        <label for={`permission-${i}`}>{per.name.split('|')[0]}</label>
                                                     </div>
                                                 ))
                                             }

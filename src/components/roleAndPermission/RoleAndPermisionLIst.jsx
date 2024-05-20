@@ -9,6 +9,7 @@ function RoleAndPermisionLIst() {
   const RoleUrl = "/dashboard/role-and-permission";
   const [roleName, setRoleName] = useState("");
 
+
   const [SpinnerContent, setSpinnerContent] = useState("Role Listing");
   const [error, setError] = useState(false);
   const [roles, setRoles] = useState([]);
@@ -27,20 +28,7 @@ function RoleAndPermisionLIst() {
       setLoading(false)
     });
   };
-  const handleStoreRole = () => {
-    debugger;
-    if (roleName == "" || roleName == null || roleName == undefined) {
-      setError(true);
-    } else {
-      setError(false);
-      handleCloseModal();
-      http.post(`${RoleUrl}/store`, { name: roleName }).then((res) => {
-        let newRoleData = res.data.data;
-        const updatedData = [...roles, newRoleData];
-        setRoles(updatedData);
-      });
-    }
-  };
+ 
 
   const renderListOfRoles = (roles) => {
     return roles?.map((role, index) => (
@@ -69,6 +57,48 @@ function RoleAndPermisionLIst() {
     
   }
 
+
+  // get all permission 
+  const [allPermission,setAllPermission]=useState([]);
+  const [selectedPermissions, setSelectedPermissions] = useState([]);
+
+
+  const addRolePermission= async ()=>{
+    try {
+        const res=await http.get(`${RoleUrl}/allPermissionList`);
+        const data=res.data.data;
+        setAllPermission(data)
+        setShowModal(true);
+
+    } catch (error) {
+        console.error('Failed to fetch permissions:', error);
+    }
+  }
+  // handle check value 
+  const handleCheckboxChange = (event, permissionId) => {
+    const { checked } = event.target;
+
+    if (checked) {
+        setSelectedPermissions(prevState => [...prevState, permissionId]);
+    } else {
+        setSelectedPermissions(prevState => prevState.filter(id => id!== permissionId));
+    }
+    
+  };
+  const handleStoreRole = () => {
+    debugger;
+    if (roleName == "" || roleName == null || roleName == undefined) {
+      setError(true);
+    } else {
+      setError(false);
+      handleCloseModal();
+      http.post(`${RoleUrl}/store`, { name: roleName,permissionIds: selectedPermissions}).then((res) => {
+        let newRoleData = res.data.data;
+        const updatedData = [...roles, newRoleData];
+        setRoles(updatedData);
+      });
+    }
+  };
   
   return (
     <div
@@ -81,7 +111,7 @@ function RoleAndPermisionLIst() {
         <div>
           <div className="add-role">
             <Link
-              onClick={handleOpenModal}
+              onClick={addRolePermission}
               className="btn btn-primary btn-sm float-end my-2"
             >
               Add Role
@@ -98,7 +128,7 @@ function RoleAndPermisionLIst() {
             </thead>
             <tbody>{renderListOfRoles(roles)}</tbody>
           </table>
-          <Modal show={showModal} onHide={handleCloseModal}>
+          <Modal show={showModal} onHide={handleCloseModal} size="lg">  
             <Modal.Header closeButton>
               <Modal.Title>Add Role</Modal.Title>
             </Modal.Header>
@@ -113,6 +143,32 @@ function RoleAndPermisionLIst() {
                     className={`${error ? "border-danger" : ""} border rounded`}
                   />
                 </Form.Group>
+
+                <Form.Group controlId="formTitle" className='mt-3'>
+                  <Form.Label>Add Permission</Form.Label>
+                  {
+                      allPermission.length>0 && allPermission.map((module,index)=>(
+                      <div className="row">
+                          <label className='text-center mb-2 bg-secondary'>{module.title}</label>
+                          <div className="col-md-12 d-flex justify-content-center align-items-center gap-4 p-2" >
+                              {
+                                  module.permissions.length>0 && module.permissions.map((per,i)=>(
+                                      <div className="permissionCheck mx-3">
+                                          <input type="checkbox" className='mx-2' 
+                                          name="permissionids" id={`permission-${i}`} 
+                                          value={per.id} 
+                                          onChange={(event) => handleCheckboxChange(event, per.id)}/>
+                                          <label for={`permission-${i}`}>{per.name.split('|')[0]}</label>
+                                      </div>
+                                  ))
+                              }
+                              
+                          </div>
+                      </div>
+                      ))
+                  }
+                  
+              </Form.Group>
               </Form>
             </Modal.Body>
             <Modal.Footer>
