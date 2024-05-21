@@ -4,6 +4,7 @@ import Spinner from '../Spinner';
 import UserListRowData from './UserListRowData';
 import AuthUser from '../../AuthUser';
 import { Button, Form, Modal } from 'react-bootstrap';
+import PermissionConstant from '../Constant/PermissionConstant';
 
 function UserList() {
   const [loading, setLoading] = useState(true);
@@ -34,16 +35,20 @@ function UserList() {
   const renderUserListRow = (users) => {
     return users?.map((user, i) => (
       <UserListRowData key={i} user={user}
-        index={i}
-
+        index={i} allRoles={allRoles}
+        handleDelete={handleDelete}
+        handleUserUpdate={handleUserUpdate}
       />
     ))
   }
-
+  const loadingFunction=(loadingData,spinnerContentData)=>{
+    setSpinnerContent(spinnerContentData);
+    setLoading(loadingData);
+    
+  }
   // add user 
   const addNewUser = () => {
     setShowModal(true);
-
   }
 
   const [formData,setFormData]=useState({
@@ -62,7 +67,6 @@ function UserList() {
           setPreview(null);
         }else{
           setErrors({ ...errors, file:null });
-          setPreview(URL.createObjectURL(fieldValue));
         }
       }else{
         fieldValue=e.target.value;
@@ -77,7 +81,7 @@ function UserList() {
     return emailRegex.test(email);
   }
 
-  const handleSignupForm=()=>{
+  const handleuserManagementForm=()=>{
     const newError={};
     if(!formData.name.trim()){
       newError.name="Name Field is Required!"
@@ -87,22 +91,38 @@ function UserList() {
     }else if(!validationEmail(formData.email)){
       newError.email1="Email not Valid!"
     }
-  
     setErrors(newError);
-  
     if(Object.keys(newError).length===0){
-      console.log(formData);
-      setBtnSpinner(true)
+      setShowModal(false);
+      loadingFunction(true, 'User Management Adding....');
       http.post(`${userURL}/store`,formData).then((res)=>{
         getUsersData();
+        loadingFunction(false)
+
       }).catch((error=>{
         console.log(error);
       }))
-      setBtnSpinner(false)
   
     }
-   
   }
+
+   // updateUser data 
+   const handleUserUpdate=(formData)=>{
+    loadingFunction(true, 'User Management Updating....');
+    http.post(`${userURL}/update`, formData).then((res) => {
+        getUsersData()
+        loadingFunction(false)
+    })
+  } 
+  // delete data 
+  const handleDelete=(userId)=>{
+      loadingFunction(true, 'User Management Deleting....');
+      http.get(`${userURL}/delete/${userId}`).then((res)=>{
+          setUsers(users.filter((user)=>user.id!==userId));
+          loadingFunction(false)  
+      })
+  }
+  const hasPermissionToCreateUser=PermissionConstant('Create|User Management');
   return (
     <div
       className="p-4 bg-gradient"
@@ -112,6 +132,8 @@ function UserList() {
         <Spinner content={SpinnerContent} />
       ) : (
         <div>
+          {
+            hasPermissionToCreateUser &&
           <div className="add-role">
             <Link
               className="btn btn-primary btn-sm float-end my-2" onClick={addNewUser}
@@ -119,11 +141,13 @@ function UserList() {
               Add User
             </Link>
           </div>
+          }
           <table className="table table-bordered table-striped">
             <thead>
               <tr>
                 <th>SN</th>
                 <th>User</th>
+                <th>Image</th>
                 <th>Role</th>
                 <th>Action</th>
               </tr>
@@ -131,7 +155,6 @@ function UserList() {
             {
               <tbody>{renderUserListRow(users)}</tbody>
             }
-            {/* <tbody>{renderListOfRoles(roles)}</tbody> */}
           </table>
           <Modal show={showModal} onHide={handleCloseModal} size="lg">
             <Modal.Header closeButton>
@@ -193,7 +216,7 @@ function UserList() {
               <Button variant="secondary" onClick={handleCloseModal}>
                 Cancel
               </Button>
-              <Button variant="primary" className={`btn px-2 ${btnSpinner ? 'btn-success' : 'btn-primary'}`}  onClick={handleSignupForm}>
+              <Button variant="primary" className={`btn px-2 ${btnSpinner ? 'btn-success' : 'btn-primary'}`}  onClick={handleuserManagementForm}>
               {btnSpinner ? 'Submiting...' : 'Submit'}
               </Button>
             </Modal.Footer>

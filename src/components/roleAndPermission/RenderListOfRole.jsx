@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Modal, Button, Form } from "react-bootstrap";
 import AuthUser from '../../AuthUser';
+import PermissionConstant from '../Constant/PermissionConstant';
 
 function RenderListOfRole({ index, role, deleteRole, RoleUrl, loadingFunction }) {
     const { http } = AuthUser();
@@ -64,25 +65,20 @@ function RenderListOfRole({ index, role, deleteRole, RoleUrl, loadingFunction })
     };
 
     const handleUpdateRolePermission=(roleId)=>{
-        console.log(selectedPermissions);
-        debugger
-        
-        // console.log(selectedPermissions);
         loadingFunction(true,'Updating Role...');
-        
         try {
             http.post(`${RoleUrl}/update`,{name:newRole,permissionids:selectedPermissions,id:roleId}).then((res)=>{
                 setShowModal(true);
                 loadingFunction(false);
-
-
             })
         } catch (error) {
             console.error('Failed to fetch permissions:', error);
 
         }
     }
-
+// permission 
+const hasEditRolePermission=PermissionConstant('Update|Role And Permission')
+const hasDeleteRolePermission=PermissionConstant('Delete|Role And Permission')
 
     return (
         <tr>
@@ -94,14 +90,19 @@ function RenderListOfRole({ index, role, deleteRole, RoleUrl, loadingFunction })
                 </Button>
             </td>
             <td>
+                {
+                    hasEditRolePermission &&
                 <Button variant="primary" onClick={() => editRolePermission('edit',role.id)} className="mx-1">
                     Edit
                 </Button>
-                {role.name !== "Admin" &&
+                }
+                {
+                    hasDeleteRolePermission && role.name !== "Admin" &&
                     <Button variant="danger" onClick={handleDeleteRole}>
                         Delete
                     </Button>
                 }
+                
             </td>
             <Modal show={showModal} onHide={handleCloseModal} size='lg'>
                 <Modal.Header closeButton>
@@ -126,11 +127,11 @@ function RenderListOfRole({ index, role, deleteRole, RoleUrl, loadingFunction })
                                 {
                                     allPermission.length>0 && allPermission.map((module,index)=>(
                                     <div className="row">
-                                        <label className='text-center mb-2 bg-secondary'>{module.title}</label>
+                                        <label className='text-center bg-secondary mx-auto my-3 p-2'>{module.title}</label>
                                         <div className="col-md-12 d-flex justify-content-center align-items-center gap-4 p-2" >
                                             {
                                                 module.permissions.length>0 && module.permissions.map((per,i)=>(
-                                                    <div className="permissionCheck mx-3">
+                                                    <div className="permissionCheck mx-4">
                                                       <input type="checkbox" className='mx-2' 
                                                         name="permissionids" id={`permission-${i}`} 
                                                         value={per.id} 

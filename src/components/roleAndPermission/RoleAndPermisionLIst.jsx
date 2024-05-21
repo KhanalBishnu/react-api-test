@@ -4,6 +4,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 import AuthUser from "../../AuthUser";
 import RenderListOfRole from "./RenderListOfRole";
 import Spinner from "../Spinner";
+import PermissionConstant from "../Constant/PermissionConstant";
 
 function RoleAndPermisionLIst() {
   const RoleUrl = "/dashboard/role-and-permission";
@@ -99,6 +100,7 @@ function RoleAndPermisionLIst() {
       });
     }
   };
+  const hasPermissionToCreateRole=PermissionConstant('Create|Role And Permission');
   
   return (
     <div
@@ -109,6 +111,8 @@ function RoleAndPermisionLIst() {
         <Spinner content={SpinnerContent} />
       ) : (
         <div>
+          {
+          hasPermissionToCreateRole &&
           <div className="add-role">
             <Link
               onClick={addRolePermission}
@@ -117,6 +121,7 @@ function RoleAndPermisionLIst() {
               Add Role
             </Link>
           </div>
+          }
           <table className="table table-bordered table-striped">
             <thead>
               <tr>
@@ -149,11 +154,11 @@ function RoleAndPermisionLIst() {
                   {
                       allPermission.length>0 && allPermission.map((module,index)=>(
                       <div className="row">
-                          <label className='text-center mb-2 bg-secondary'>{module.title}</label>
+                          <label className='text-center bg-secondary mx-auto my-3 p-2'>{module.title}</label>
                           <div className="col-md-12 d-flex justify-content-center align-items-center gap-4 p-2" >
                               {
                                   module.permissions.length>0 && module.permissions.map((per,i)=>(
-                                      <div className="permissionCheck mx-3">
+                                      <div className="permissionCheck mx-4">
                                           <input type="checkbox" className='mx-2' 
                                           name="permissionids" id={`permission-${i}`} 
                                           value={per.id} 
@@ -167,7 +172,6 @@ function RoleAndPermisionLIst() {
                       </div>
                       ))
                   }
-                  
               </Form.Group>
               </Form>
             </Modal.Body>

@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import PermissionConstant from "../components/Constant/PermissionConstant";
 function Sidebar() {
+  const hasPermissionToCreateProduct=PermissionConstant('Create|Product');
+  const hasPermissionToViewProduct=PermissionConstant('View|Product');  
   const hasViewRolePermission = PermissionConstant('View|Role And Permission');
   const hasViewUserManageMent = PermissionConstant('View|User Management');
   const navLinks = [
     { to: "/dashboard", label: "Dashboard" },
-    { to: "/dashboard/products", label: "View Note" },
-    { to: "/dashboard/products/add-product", label: "Add Note" },
+    hasPermissionToViewProduct &&{ to: "/dashboard/products", label: "View Product" },
+    hasPermissionToCreateProduct &&{ to: "/dashboard/products/add-product", label: "Add Product" },
     hasViewRolePermission && { to: "/dashboard/role-and-permission", label: "Role And Permission" },
     hasViewUserManageMent && { to: "/dashboard/user-management", label: "User Management" },
   ].filter(Boolean);
@@ -32,9 +34,6 @@ function Sidebar() {
         {navLinks.map((link) => (
          (<li key={link.to} className="nav-item">
               <Link to={link.to} className={`nav-link text-white ${location.pathname === link.to ? 'active' : ''}`} aria-current="page">
-                <svg className="bi me-2" width="16" height="16">
-                  <use xlinkHref="#home"></use>
-                </svg>
                 {link.label}
               </Link>
           </li>)

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
+import PermissionConstant from "../components/Constant/PermissionConstant";
 
 const ProductTableRow = ({ product, onUpdate, index,onDelete }) => {
   const [showModal, setShowModal] = useState(false);
@@ -62,6 +63,11 @@ const ProductTableRow = ({ product, onUpdate, index,onDelete }) => {
         onDelete(product.id);
     }
   };
+  // permission 
+  const hasPermissionToDeleteProduct=PermissionConstant('Delete|Product');
+  const hasPermissionToEditProduct=PermissionConstant('Update|Product');
+
+
   return (
     <tr>
       <td>{index + 1}</td>
@@ -79,12 +85,18 @@ const ProductTableRow = ({ product, onUpdate, index,onDelete }) => {
       </td>
       <td>{product.tags}</td>
       <td>
+        {
+          hasPermissionToEditProduct &&
         <Button variant="primary" onClick={handleOpenModal} className="mx-1">
           Edit
         </Button>
+        }
+        {
+          hasPermissionToDeleteProduct && 
         <Button variant="danger" onClick={handleDeleteProduct}>
           Delete
         </Button>
+        }
       </td>
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
