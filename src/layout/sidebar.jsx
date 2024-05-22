@@ -1,11 +1,20 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import PermissionConstant from "../components/Constant/PermissionConstant";
+// import PermissionConstant from "../components/Constant/PermissionConstant";
+import usePermissions from '../hooks/usePermissions';
+
 function Sidebar() {
-  const hasPermissionToCreateProduct=PermissionConstant('Create|Product');
-  const hasPermissionToViewProduct=PermissionConstant('View|Product');  
-  const hasViewRolePermission = PermissionConstant('View|Role And Permission');
-  const hasViewUserManageMent = PermissionConstant('View|User Management');
+  debugger
+  const { checkPermission }=usePermissions();
+  
+  const hasViewUserManageMent = checkPermission('View|User Management');
+  const hasPermissionToCreateProduct=checkPermission('Create|Product');
+  const hasPermissionToViewProduct=checkPermission('View|Product');  
+  const hasViewRolePermission = checkPermission('View|Role And Permission');
+  // const hasPermissionToCreateProduct=PermissionConstant('Create|Product');
+  // const hasPermissionToViewProduct=PermissionConstant('View|Product');  
+  // const hasViewRolePermission = PermissionConstant('View|Role And Permission');
+  // const hasViewUserManageMent = PermissionConstant('View|User Management');
   const navLinks = [
     { to: "/dashboard", label: "Dashboard" },
     hasPermissionToViewProduct &&{ to: "/dashboard/products", label: "View Product" },
