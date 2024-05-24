@@ -1,9 +1,10 @@
+// src/features/permission/permissionSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 const permissionsSlice = createSlice({
   name: 'permissions',
   initialState: {
-    list: [], // Ensure initial state is an array
+    list: [],
   },
   reducers: {
     setPermissions(state, action) {
