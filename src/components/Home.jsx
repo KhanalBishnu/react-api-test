@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Header from '../auth/Header'
 import AuthUser from '../AuthUser'
 import Spinner from './Spinner';
+import { Link } from 'react-router-dom';
 function Home() {
   const {http}=AuthUser();
   const [products,setProducts]=useState([]);
@@ -44,9 +45,11 @@ function Home() {
           <div className="row">
               {
                 products?.map((product)=>(
-                  <div className="col-lg-3 col-md-4  col-sm-6 d-flex align-items-stretch" key={product.id}>
-                        <div className="card m-3">
-                      <img src={product.media.length>0?product.media[0].original_url:""} className="card-img-top" alt="..." />
+                  <div className="col-lg-3 col-md-4  col-sm-6 d-flex align-items-stretch " key={product.id}>
+                        <div className="card m-2 home-image-container">
+                        <Link to={`/product/details/${product.id}`}>
+                      <img src={product.media.length>0?product.media[0].original_url:"/images/test.jpeg"} className="card-img-top" alt="product-images"height="280px" />
+                      </Link>
                       <div className="card-body">
                         <h5 className="card-title">{product.title}</h5>
                         <p className="card-text">{truncateText(product.description,8)}</p>
@@ -58,7 +61,7 @@ function Home() {
                           ))
                         }<br />
 
-                        <a href="#" className="btn btn-primary">Read Me</a>
+                        <Link to={`/product/details/${product.id}`} className="btn btn-primary btn-sm">Read Me</Link>
                       </div>
                     </div>
                   </div>

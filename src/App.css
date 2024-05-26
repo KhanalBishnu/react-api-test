@@ -121,3 +121,23 @@
   font-weight: bold; /* Message font weight */
   width: 100%;
 }
+
+
+/* home page  */
+
+/* Styling the image */
+.home-image-container img {
+  width: 100%;
+  transition: transform 0.5s ease; /* Smooth zoom effect */
+}
+
+/* Zoom effect on hover */
+.home-image-container:hover img {
+  transform: scaleY(1.1);
+}
+
+.home-image-container:hover{
+  /* background-color: transparent; */
+  box-shadow: 5px 8px 5px rgb(219, 228, 231);
+  
+}

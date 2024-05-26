@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import { setPermissions } from "./features/permission/permissionSlice";
 import AuthUser from "./AuthUser";
 import Spinner from "./components/Spinner";
+import ProductDetails from "./components/frontend/ProductDetails";
 
 function App() {
   const dispatch = useDispatch();
@@ -44,6 +45,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/sign-up" element={<Signup />} />
+          <Route path="/product/details/:id" element={<ProductDetails />} />
+
+
           <Route path="/dashboard" element={<ProtectedRoute Component={Dashboard} />}>
             <Route path="products">
               <Route path="add-product" element={<AddProduct />} />
