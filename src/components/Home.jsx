@@ -9,22 +9,25 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [pageNumber, setPageNumber] = useState(null);
   const [limit, setLimit] = useState(8);
+  let fetch=true;
   let newPage=1;
 
   useEffect(() => {
     getProductLIst();
-    console.log(pageNumber);
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const getProductLIst = async (page=1) => {
-    debugger
     await  http.post('/products', { page, limit }).then((res) => {
-      console.log(res);
       setLoading(false)
-      setProducts(prevItems => [...prevItems, ...res.data.data.products]);
+      if(res.data.data.products.length>0){
+        setProducts(prevItems => [...prevItems, ...res.data.data.products]);
+      }else{
+        fetch=false;
+      }
      
     }).catch(function (error) {
       console.error(error);
@@ -35,13 +38,15 @@ function Home() {
   }
   function handleScroll(e) {
     e.preventDefault();
-    if (
-      window.innerHeight + e.target.documentElement.scrollTop + 1 >=
-      e.target.documentElement.scrollHeight
-    ) {
-      // setPageNumber(prev=>prev+1);
-      newPage=newPage+1;
-      getProductLIst(newPage)
+    if(fetch){
+      if (
+        window.innerHeight + e.target.documentElement.scrollTop + 1 >=
+        e.target.documentElement.scrollHeight
+      ) {
+        // setPageNumber(prev=>prev+1);
+        newPage=newPage+1;
+        getProductLIst(newPage)
+      }
     }
   }
 
