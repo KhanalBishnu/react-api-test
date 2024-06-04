@@ -4,6 +4,7 @@ import Spinner from "../components/Spinner";
 import ProductTableRow from "./ProductTableRow";
 import { toast } from "react-toastify";
 import Pagination from "../layout/Pagination";
+import SkeletonTable from "../skeleton/SkeletonTable";
 
 function ProductList() {
   const productURL = "/dashboard/products";
@@ -21,7 +22,6 @@ function ProductList() {
   }, [currentPage]);
   const getProductList = () => {
     try {
-      setLoading(true);
       let productlist=`${productURL}/getList`;
       http.post(productlist, { page: currentPage,limit:limit }).then((res) => {
         let data = res.data;
@@ -88,9 +88,7 @@ function ProductList() {
       className="p-4 bg-gradient"
       style={{ height: "92vh", overflow: "auto" }}
     >
-      {loading ? (
-        <Spinner content="Product Listing" />
-      ) : (<>
+      
         <table className="table table-bordered table-striped ">
           <thead>
             <tr>
@@ -101,11 +99,18 @@ function ProductList() {
               <th>Action</th>
             </tr>
           </thead>
-          <tbody>{renderListOfProducts(products)}</tbody>
+          {loading ? (
+        // <Spinner content="Product Listing" />
+        <SkeletonTable rows={10} columns={5} />) : (
+          <tbody>
+            {
+              renderListOfProducts(products)
+            }
+            </tbody>
+            )
+          }
         </table>
-      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} limit={limit} />
-      </>
-      )}
+        {!loading &&<Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} limit={limit} />}
     </div>
   );
 }
