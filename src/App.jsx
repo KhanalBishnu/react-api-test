@@ -18,6 +18,7 @@ import { setPermissions } from "./features/permission/permissionSlice";
 import AuthUser from "./AuthUser";
 import Spinner from "./components/Spinner";
 import ProductDetails from "./components/frontend/ProductDetails";
+import PaymentResult from "./components/esewa/PaymentStatus";
 
 function App() {
   const dispatch = useDispatch();
@@ -43,6 +44,8 @@ function App() {
         <Spinner content="Loading..." /> :
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/success" element={<PaymentResult />} />
+
           <Route path="/login" element={<Login />} />
           <Route path="/sign-up" element={<Signup />} />
           <Route path="/product/details/:id" element={<ProductDetails />} />

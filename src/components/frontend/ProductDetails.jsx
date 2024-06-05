@@ -4,6 +4,7 @@ import Spinner from '../Spinner';
 import Header from '../../auth/Header';
 import AuthUser from '../../AuthUser';
 import { IoCheckmark } from "react-icons/io5";
+import EsewaPayment from '../esewa/Esewapayment';
 
 
 function ProductDetails() {
@@ -11,6 +12,8 @@ function ProductDetails() {
     const [loading, setLoading] = useState(true);
     const [product, setProduct] = useState(null);
     const { http } = AuthUser();
+    const [esewaPay, setEsewaPay] = useState(false);
+
     useEffect(() => {
         http.get(`/product/details/${id}`).then((res) => {
             setProduct(res.data.data)
@@ -21,6 +24,9 @@ function ProductDetails() {
     const  TagBadges=(tags) =>{
         const tagsArray = tags.split(',');
         return tagsArray;
+      }
+      const handleEsewaView=()=>{
+        setEsewaPay((prev)=>!prev)
       }
     return (
         <>
@@ -51,7 +57,7 @@ function ProductDetails() {
                                     {/* <button className="btn btn-dark btn-rounded mr-1" data-toggle="tooltip" title="" data-original-title="Add to cart">
                                         <i className="fa fa-shopping-cart"></i>
                                     </button> */}
-                                    <button className="btn btn-primary btn-rounded">Buy Now</button>
+                                    <button className="btn btn-primary btn-rounded" onClick={handleEsewaView}>Buy Now</button>
                                     <h3 className="box-title mt-5">Tag Highlights</h3>
                                     <ul className="list-unstyled">
                                         {
@@ -60,6 +66,9 @@ function ProductDetails() {
                                             ))
                                         }
                                     </ul>
+                                    {
+                                        esewaPay && <EsewaPayment />
+                                    }
                                 </div>
                             </div>
                         </div>

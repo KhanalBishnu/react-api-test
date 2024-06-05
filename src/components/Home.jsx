@@ -9,11 +9,12 @@ function Home() {
   const { http } = AuthUser();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [pageNumber, setPageNumber] = useState(1);
+  // const [pageNumber, setPageNumber] = useState(1);
   const [limit] = useState(8);
-  const [fetchMore, setFetchMore] = useState(true);
+  // const [fetchMore, setFetchMore] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-
+  let pageNumber=1;
+  let fetchMore=true;
   useEffect(() => {
     getProductList(1, searchQuery);
     const handleScroll = (e) => {
@@ -34,9 +35,13 @@ function Home() {
       const newProducts = res.data.data.products;
       if (newProducts.length > 0) {
         setProducts((prev) => (page === 1 ? newProducts : [...prev, ...newProducts]));
-        setFetchMore(true);
-      } else {
-        setFetchMore(false);
+        // setFetchMore(true);
+      } else if(query){
+        setProducts((prev) => newProducts);
+        fetchMore=false;
+      }else{
+        fetchMore=false;
+
       }
     } catch (error) {
       console.error(error);
@@ -47,7 +52,8 @@ function Home() {
 
   const loadMoreProducts = () => {
     const nextPage = pageNumber + 1;
-    setPageNumber(nextPage);
+    // setPageNumber(nextPage);
+    pageNumber=nextPage;
     getProductList(nextPage, searchQuery);
   };
 
@@ -69,8 +75,9 @@ function Home() {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchQuery(value);
-    setPageNumber(1);
-    setFetchMore(true);
+    // setPageNumber(1);
+    pageNumber=1;
+    fetchMore=true;
     getProductList(1, value);
   };
 
