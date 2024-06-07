@@ -35,7 +35,6 @@ function Home() {
       const newProducts = res.data.data.products;
       if (newProducts.length > 0) {
         setProducts((prev) => (page === 1 ? newProducts : [...prev, ...newProducts]));
-        // setFetchMore(true);
       } else if(query){
         setProducts((prev) => newProducts);
         fetchMore=false;
@@ -99,7 +98,7 @@ function Home() {
             />
           </div>
         </div>
-        {loading && products.length === 0 ?
+        {loading ?
           <div className="row">
             {Array(12).fill().map((_, idx) => (
               <div className="col-md-3" key={idx}>

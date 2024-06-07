@@ -27,7 +27,6 @@ const EsewaPayment = () => {
                     hiddenField.type = 'hidden';
                     hiddenField.name = key;
                     hiddenField.value = params[key];
-
                     form.appendChild(hiddenField);
                 }
             }

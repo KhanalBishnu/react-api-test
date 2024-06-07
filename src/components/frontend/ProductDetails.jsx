@@ -51,12 +51,6 @@ function ProductDetails() {
                                 <div className="col-lg-7 col-md-7 col-sm-6">
                                     <h4 className="box-title mt-5">Product description</h4>
                                     <p>{product.description}</p>
-                                    {/* <h2 className="mt-5">
-                                        $153<small className="text-success">(36%off)</small>
-                                    </h2> */}
-                                    {/* <button className="btn btn-dark btn-rounded mr-1" data-toggle="tooltip" title="" data-original-title="Add to cart">
-                                        <i className="fa fa-shopping-cart"></i>
-                                    </button> */}
                                     <button className="btn btn-primary btn-rounded" onClick={handleEsewaView}>Buy Now</button>
                                     <h3 className="box-title mt-5">Tag Highlights</h3>
                                     <ul className="list-unstyled">

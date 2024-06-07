@@ -4,7 +4,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 
 const SkeletonProductList = () => {
     return (
-        <div className="skeleton-product m-3 p-2">
+        <div className="skeleton-product m-3 p-2 rounded">
             <Skeleton height={200} />
             <Skeleton count={3} style={{ marginTop: '10px' }} />
         </div>
