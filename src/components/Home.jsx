@@ -98,7 +98,7 @@ function Home() {
             />
           </div>
         </div>
-        {loading ?
+        {loading && products.length === 0?
           <div className="row">
             {Array(12).fill().map((_, idx) => (
               <div className="col-md-3" key={idx}>
