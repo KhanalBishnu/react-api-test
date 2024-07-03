@@ -3,7 +3,7 @@ import { hasPermission } from '../utils/permissionUtils';
 
 const usePermissions = () => {
   const permissions = useSelector((state) => state.permissions.list);
-debugger
+
   const checkPermission = (requiredPermission) => {
     return hasPermission(permissions, requiredPermission);
   };
