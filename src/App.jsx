@@ -45,12 +45,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/success" element={<PaymentResult />} />
-
           <Route path="/login" element={<Login />} />
           <Route path="/sign-up" element={<Signup />} />
           <Route path="/product/details/:id" element={<ProductDetails />} />
-
-
           <Route path="/dashboard" element={<ProtectedRoute Component={Dashboard} />}>
             <Route path="products">
               <Route path="add-product" element={<AddProduct />} />

@@ -161,7 +161,7 @@ function UserList() {
               <Modal.Title>Add User</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <form >
+            <form >
                 <div className="illustration">
                   <i className="icon ion-ios-navigate"></i>
                 </div>
